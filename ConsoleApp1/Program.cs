@@ -4,8 +4,8 @@
     {
         private static void Main(string[] args)
         {
-            var sodaMachine = new SodaMachine();
-            sodaMachine.Start();
+            var sodaMachineService = new SodaMachineService();
+            sodaMachineService.Start();
         }
     }
 }
