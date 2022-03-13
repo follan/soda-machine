@@ -1,9 +1,13 @@
-﻿namespace ConsoleApp1;
+﻿using System.Xml;
+
+namespace ConsoleApp1;
 
 public class SodaMachine
 {
     private static int _totalMoney;
-
+    private static readonly Soda Coke = new() { Name = "coke", Price = 20 };
+    private static readonly Soda Sprite = new() { Name = "sprite", Price = 15 };
+    private static readonly Soda Fanta = new() { Name = "fanta", Price = 15 };
 
     /// <summary>
     /// This is the starter method for the machine
@@ -12,7 +16,9 @@ public class SodaMachine
     {
         var inventory = new[]
         {
-            new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 }
+            new InventoryLine { Soda = Coke, Quantity = 5 },
+            new InventoryLine { Soda = Sprite, Quantity = 3 },
+            new InventoryLine { Soda = Fanta, Quantity = 3 }
         };
 
         while (true)
@@ -39,46 +45,46 @@ public class SodaMachine
             {
                 // split string on space
                 var orderedSodaName = input.Split(' ')[1];
-                var orderedSoda = inventory.SingleOrDefault(s => s.Name == orderedSodaName);
+                var orderedSoda = inventory.SingleOrDefault(s => s.Soda.Name == orderedSodaName);
                 if (orderedSoda is null)
                 {
                     Console.WriteLine("No such soda");
                     continue;
                 }
 
-                if (orderedSoda.Nr == 0)
+                if (orderedSoda.Quantity == 0)
                 {
-                    Console.WriteLine($"No {orderedSoda.Name} left");
+                    Console.WriteLine($"No {orderedSoda.Soda.Name} left");
                     continue;
                 }
 
-                if (_totalMoney < orderedSoda.Price)
+                if (_totalMoney < orderedSoda.Soda.Price)
                 {
-                    var missingAmount = orderedSoda.Price - _totalMoney;
+                    var missingAmount = orderedSoda.Soda.Price - _totalMoney;
                     Console.WriteLine($"Need {missingAmount} more");
                     continue;
                 }
 
-                Console.WriteLine($"Giving {orderedSoda.Name} out");
-                _totalMoney -= orderedSoda.Price;
+                Console.WriteLine($"Giving {orderedSoda.Soda.Name} out");
+                _totalMoney -= orderedSoda.Soda.Price;
                 Console.WriteLine("Giving " + _totalMoney + " out in change");
                 _totalMoney = 0;
-                orderedSoda.Nr--;
+                orderedSoda.Quantity--;
             }
 
             if (input.StartsWith("sms order"))
             {
                 var orderedSodaName = input.Split(' ')[2];
-                var orderedSoda = inventory.SingleOrDefault(s => s.Name == orderedSodaName);
+                var orderedSoda = inventory.SingleOrDefault(s => s.Soda.Name == orderedSodaName);
                 if (orderedSoda is null)
                 {
                     continue;
                 }
-                
-                if (orderedSoda.Nr > 0)
+
+                if (orderedSoda.Quantity > 0)
                 {
-                    Console.WriteLine($"Giving {orderedSoda.Name} out");
-                    orderedSoda.Nr--;
+                    Console.WriteLine($"Giving {orderedSoda.Soda.Name} out");
+                    orderedSoda.Quantity--;
                 }
             }
 
